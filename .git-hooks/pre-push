@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# pre-push hook — ProGenie confidential-source leak guard (local layer)
+#
+# Runs fence-scan.sh before every git push and aborts the push on a hit.
+# Installed via: git config core.hooksPath .git-hooks
+#
+# This is a second layer behind the CI gate — catches leaks before they
+# even reach GitHub, so you get instant feedback without waiting for Actions.
+
+set -euo pipefail
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+SCAN_SCRIPT="$REPO_ROOT/scripts/fence-scan.sh"
+
+if [ ! -f "$SCAN_SCRIPT" ]; then
+  echo "pre-push: fence-scan.sh not found at $SCAN_SCRIPT — skipping (install scripts/fence-scan.sh)"
+  exit 0
+fi
+
+chmod +x "$SCAN_SCRIPT"
+"$SCAN_SCRIPT"

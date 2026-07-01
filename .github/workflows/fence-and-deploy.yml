@@ -1,0 +1,58 @@
+name: Fence Scan + Deploy
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+
+# Required for Pages deploy
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Only one deploy runs at a time; skip queued runs but finish the in-progress one
+concurrency:
+  group: "pages-${{ github.ref }}"
+  cancel-in-progress: false
+
+jobs:
+  # ── Job 1: fence scan (runs on every push, every branch) ─────────────────────
+  fence-scan:
+    name: Confidential-Source Fence Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Make scan script executable
+        run: chmod +x scripts/fence-scan.sh
+
+      - name: Run fence scan
+        run: scripts/fence-scan.sh
+
+  # ── Job 2: deploy to Pages (only on main, only if fence-scan passes) ─────────
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: fence-scan          # hard dependency — deploy is BLOCKED if scan fails
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "."   # serve from repo root
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
