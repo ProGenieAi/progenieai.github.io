@@ -33,5 +33,5 @@ under the `<!-- CHANGELOG -->` section. Badge types: ship / fix / idea / kill.
 - 2026-06-28 — Ship — Autonomous posting verified end-to-end
 - 2026-06-25 — Ship — Operator Brief Builder live on GitHub Pages
 - 2026-06-25 — Ship — Genie OS live on Gumroad
-- 2026-06-25 — Kill — Real-estate product permanently dead
+- 2026-06-25 — Kill — Niche product direction killed — general-audience rule locked in
 - 2026-06-24 — Ship — First autonomous publish

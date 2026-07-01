@@ -30,7 +30,7 @@ NC='\033[0m' # no colour
 FOUND=0
 
 # Build grep pattern — single regex, alternation, case-insensitive
-PATTERN='\bneo\b|agents&me|agents and me|agentsandme|tom even|\bcopy me\b|no human in the loop|nohuman'
+PATTERN='\bneo\b|agents&me|agents and me|agentsandme|tom even|\bcopy me\b|no human in the loop|nohuman|real.?estate|realtor|agentgenie|founding100|fiverr'
 
 # Files to scan: args if given, else entire repo (tracked + untracked, excluding .git)
 if [ "$#" -gt 0 ]; then
